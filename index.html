@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>FreshBite - Online Food Ordering | DAS-EC-001</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"/>
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+
+  <!-- Navigation -->
+  <nav class="navbar">
+    <div class="container nav-container">
+      <a href="#home" class="logo">🍕 FreshBite</a>
+      <ul class="nav-links">
+        <li><a href="#home">Home</a></li>
+        <li><a href="#restaurants">Restaurants</a></li>
+        <li><a href="#menu">Menu</a></li>
+        <li><a href="#wishlist">Wishlist (<span id="wishlist-count">0</span>)</a></li>
+        <li><a href="#cart">Cart (<span id="cart-count">0</span>)</a></li>
+        <li><a href="#account">Account</a></li>
+        <li><a href="#reviews">Reviews</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Hero / Home -->
+  <section id="home" class="hero">
+    <div class="hero-content">
+      <h1>Delicious Food Delivered To Your Doorstep</h1>
+      <p>Order fresh, tasty meals from the best local restaurants in minutes.</p>
+      <a href="#menu" class="btn primary-btn">Order Now</a>
+    </div>
+  </section>
+
+  <!-- Special Offers & Coupons -->
+  <section class="offers container">
+    <div class="offer-card">
+      <h3>🎉 Flat 30% OFF</h3>
+      <p>Use coupon code <strong>FRESH30</strong> at checkout on orders above $20.</p>
+    </div>
+    <div class="offer-card">
+      <h3>⚡ Flat $5 OFF</h3>
+      <p>Use coupon code <strong>TASTY5</strong> for an instant $5 discount.</p>
+    </div>
+  </section>
+
+  <!-- Restaurants Section -->
+  <section id="restaurants" class="container section">
+    <h2>Featured Restaurants</h2>
+    <div class="restaurant-grid">
+      <div class="card">
+        <img src="https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=500&auto=format&fit=crop&q=60" alt="Italian Delight"/>
+        <div class="card-body">
+          <h3>Italian Delight</h3>
+          <p>Italian • 4.8 ⭐ • 25 mins</p>
+        </div>
+      </div>
+      <div class="card">
+        <img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=500&auto=format&fit=crop&q=60" alt="Burger Bistro"/>
+        <div class="card-body">
+          <h3>Burger Bistro</h3>
+          <p>American • 4.6 ⭐ • 20 mins</p>
+        </div>
+      </div>
+      <div class="card">
+        <img src="https://images.unsplash.com/photo-1552566626-52f8b828add9?w=500&auto=format&fit=crop&q=60" alt="Green Bowl Kitchen"/>
+        <div class="card-body">
+          <h3>Green Bowl Kitchen</h3>
+          <p>Healthy & Vegan • 4.9 ⭐ • 15 mins</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Menu Section (Dietary Filters & Wishlist) -->
+  <section id="menu" class="container section">
+    <h2>Our Menu</h2>
+    <div class="filter-buttons">
+      <button class="filter-btn active" onclick="filterMenu('all')">All</button>
+      <button class="filter-btn" onclick="filterMenu('veg')">Veg Only</button>
+      <button class="filter-btn" onclick="filterMenu('non-veg')">Non-Veg</button>
+      <button class="filter-btn" onclick="filterMenu('vegan')">Vegan 🌱</button>
+    </div>
+    <div class="menu-grid" id="menu-grid"></div>
+  </section>
+
+  <!-- Wishlist Section -->
+  <section id="wishlist" class="container section">
+    <h2>My Wishlist ❤️</h2>
+    <div id="wishlist-grid" class="menu-grid">
+      <p style="grid-column: 1/-1; text-align: center;">No items in wishlist yet.</p>
+    </div>
+  </section>
+
+  <!-- Cart Section -->
+  <section id="cart" class="container section">
+    <h2>Shopping Cart</h2>
+    <div id="cart-items" class="cart-items">
+      <p>Your cart is empty.</p>
+    </div>
+    
+    <div class="cart-total" id="cart-total-container" style="display:none;">
+      <div class="coupon-box">
+        <input type="text" id="coupon-input" placeholder="Enter coupon code (e.g. FRESH30)" />
+        <button class="btn secondary-btn" onclick="applyCoupon()">Apply Coupon</button>
+      </div>
+      <p id="coupon-status"></p>
+      <hr style="margin: 15px 0; border: none; border-top: 1px solid #ddd;" />
+      <p>Subtotal: $<span id="cart-subtotal">0.00</span></p>
+      <p id="discount-row" style="color: green; display: none;">Discount: -$<span id="cart-discount">0.00</span></p>
+      <h3>Grand Total: $<span id="cart-total">0.00</span></h3>
+      <a href="#checkout" class="btn primary-btn">Proceed to Checkout</a>
+    </div>
+  </section>
+
+  <!-- Checkout Section -->
+  <section id="checkout" class="container section">
+    <h2>Checkout & Delivery</h2>
+    <form id="checkout-form" class="checkout-form" onsubmit="handleCheckout(event)">
+      <div class="form-group">
+        <label>Full Name</label>
+        <input type="text" required placeholder="John Doe" />
+      </div>
+      <div class="form-group">
+        <label>Delivery Address</label>
+        <input type="text" required placeholder="Mall Road, Mussoorie, Uttarakhand" />
+      </div>
+      <div class="form-group">
+        <label>Delivery Time Selection</label>
+        <select required>
+          <option value="asap">ASAP (Express: 25-35 mins)</option>
+          <option value="lunch">Lunch Slot (1:00 PM - 2:00 PM)</option>
+          <option value="evening">Dinner Slot (7:30 PM - 8:30 PM)</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Payment Method</label>
+        <select id="payment-method-select" required>
+          <option value="online">Online Payment Gateway (Card / UPI / NetBanking)</option>
+          <option value="cod">Cash on Delivery</option>
+        </select>
+      </div>
+      <button type="submit" class="btn primary-btn" style="width: 100%;">Complete Order</button>
+    </form>
+  </section>
+
+  <!-- Simulated Payment Gateway Modal -->
+  <div id="payment-modal" class="modal">
+    <div class="modal-content">
+      <h3>🔒 FreshBite Secure Payment Simulation</h3>
+      <p style="margin: 10px 0;">Total Payable: <strong>$<span id="modal-pay-amount">0.00</span></strong></p>
+      <div class="form-group">
+        <input type="text" placeholder="Card Number / UPI ID (Simulated)" value="4111 2222 3333 4444" />
+      </div>
+      <button class="btn primary-btn" onclick="confirmPayment(true)" style="width:100%;">Authorize Payment</button>
+      <button class="btn cancel-btn" onclick="confirmPayment(false)" style="width:100%; margin-top: 8px;">Cancel</button>
+    </div>
+  </div>
+
+  <!-- Simulated Live Order Tracking Section -->
+  <section id="tracking" class="container section" style="display:none;">
+    <h2>Live Order Tracking 🛵</h2>
+    <div class="tracking-card">
+      <div class="tracking-steps">
+        <div class="step active" id="step-1"><i class="fa fa-receipt"></i><p>Order Placed</p></div>
+        <div class="step" id="step-2"><i class="fa fa-fire"></i><p>Preparing Food</p></div>
+        <div class="step" id="step-3"><i class="fa fa-motorcycle"></i><p>Out for Delivery</p></div>
+        <div class="step" id="step-4"><i class="fa fa-check-circle"></i><p>Delivered</p></div>
+      </div>
+      <p id="tracking-message" style="margin-top: 20px; font-weight: bold; color: var(--primary-orange);"></p>
+    </div>
+  </section>
+
+  <!-- Customer Reviews & Ratings -->
+  <section id="reviews" class="container section">
+    <h2>Customer Reviews & Ratings ⭐</h2>
+    <div class="restaurant-grid">
+      <div class="review-card">
+        <p class="rating">⭐⭐⭐⭐⭐</p>
+        <p>"The Margherita Pizza was hot and delivered in less than 25 minutes. Best food app experience!"</p>
+        <strong>- Ananya Sharma</strong>
+      </div>
+      <div class="review-card">
+        <p class="rating">⭐⭐⭐⭐⭐</p>
+        <p>"Huge fan of the Vegan Buddha Bowl. Crisp ingredients and excellent dressing."</p>
+        <strong>- Rahul Verma</strong>
+      </div>
+      <div class="review-card">
+        <p class="rating">⭐⭐⭐⭐☆</p>
+        <p>"Super smooth UI and easy discount coupon application. Will order again."</p>
+        <strong>- Rohan Mehta</strong>
+      </div>
+    </div>
+  </section>
+
+  <!-- User Account Section -->
+  <section id="account" class="container section">
+    <h2>User Account</h2>
+    <div class="account-card">
+      <p>Logged in as: <strong>student@freshbite.com</strong></p>
+      <p>Saved Addresses: Rajpur Road, Dehradun, Uttarakhand</p>
+      <p>Total Orders Placed: <span id="orders-count">0</span></p>
+    </div>
+  </section>
+
+  <!-- Contact Section -->
+  <section id="contact" class="container section">
+    <h2>Contact Us</h2>
+    <div class="contact-box">
+      <p>📍 Location: Rajpur Road, Dehradun, Uttarakhand, India</p>
+      <p>📞 Phone: +91 9600095045</p>
+      <p>✉️ Email: mail@freeinternships.in</p>
+    </div>
+  </section>
+
+  <footer>
+    <p>© 2026 FreshBite Food Ordering | Task ID: WD-EC-001 | Student Code: DAS-EC-001</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
